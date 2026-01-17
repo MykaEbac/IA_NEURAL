@@ -136,5 +136,29 @@ async function acionarScannerReal() {
         }
     }
 </script>
+
+    <script>
+
+    // Função de Auto-Refresh (Roda a cada 5 segundos)
+setInterval(async () => {
+    try {
+        const response = await fetch('http://localhost:5000/stream_signals');
+        const data = await response.json();
+        
+        // Atualiza os Valores de Força
+        document.getElementById('v-edom').innerText = (data.friccao * 100).toFixed(1) + "%";
+        document.getElementById('v-ishmael').innerText = (data.evolucao * 100).toFixed(1) + "%";
+        document.getElementById('v-neutro').innerText = (data.estabilidade * 100).toFixed(1) + "%";
+        
+        // Atualiza o Log com as notícias reais capturadas
+        if(data.latest_news) {
+            addLog(`SINAL REAL: ${data.latest_news}`);
+        }
+    } catch (e) {
+        console.log("Aguardando pulso do motor...");
+    }
+}, 5000);
+        </script>
+    
 </body>
 </html>
