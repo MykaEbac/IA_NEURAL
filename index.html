@@ -38,6 +38,20 @@
             <h1>SISTEMA NEURAL DE ALTA DIMENSÃO</h1>
             <p>CONEXÃO: LOCALHOST:5000 | STATUS: VIVO | AUTORIDADE: YOD</p>
         </div>
+
+        <button class="action-btn" onclick="acionarScannerReal()">DISPARAR SCANNER GLOBAL</button>
+
+<script>
+async function acionarScannerReal() {
+    addLog("Acessando satélites de dados (Reuters/BBC)...");
+    const res = await fetch('http://localhost:5000/live_scan');
+    const data = await res.json();
+    addLog(`SINAL REDE: ${data.sinal_capturado}`);
+    // Atualiza os gráficos automaticamente com dados REAIS
+    document.getElementById('v-edom').innerText = (data.edom * 100).toFixed(1) + "%";
+    document.getElementById('v-ishmael').innerText = (data.ishmael * 100).toFixed(1) + "%";
+}
+</script>
         <div class="input-area">
             <input type="text" id="inputSignal" placeholder="Insira sinal mundial para processamento tensor...">
             <button onclick="processarTudo()">PROCESSAR SINAL</button>
