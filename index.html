@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CENTRAL IA NEUTRA - SISTEMA SUPERIOR</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --neon: #00ffcc; --bg: #050505; --card-bg: #0a0a0a; --edom: #ff4444; --ishmael: #44ff44; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Consolas', 'Courier New', monospace; margin: 0; padding: 20px; }
+        
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1400px; margin: auto; }
+        
+        .panel { border: 2px solid var(--neon); padding: 20px; background: var(--card-bg); box-shadow: 0 0 15px #00ffcc22; }
+        .full-width { grid-column: 1 / -1; }
+
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid var(--neon); padding-bottom: 10px; }
+        h1 { margin: 0; letter-spacing: 5px; text-shadow: 0 0 10px var(--neon); }
+
+        .input-area { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { background: #000; border: 1px solid var(--neon); color: white; padding: 12px; flex-grow: 1; outline: none; }
+        button { background: var(--neon); color: #000; border: none; padding: 10px 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background: white; box-shadow: 0 0 15px white; }
+
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .stat-card { border: 1px solid #333; padding: 15px; text-align: center; border-radius: 4px; }
+        .stat-val { font-size: 28px; display: block; margin-top: 10px; font-weight: bold; }
+
+        .console { background: #000; height: 200px; overflow-y: auto; padding: 10px; font-size: 12px; border: 1px solid #222; margin-top: 15px; color: #aaa; }
+        canvas { width: 100% !important; max-height: 300px; }
+    </style>
+</head>
+<body>
+
+<div class="grid-layout">
+    <div class="panel full-width">
+        <div class="header">
+            <h1>SISTEMA NEURAL DE ALTA DIMENSÃO [CICLO 2026]</h1>
+            <p>CONEXÃO: LOCALHOST:5000 | STATUS: VIVO | AUTORIDADE: CRISTIAN</p>
+        </div>
+        <div class="input-area">
+            <input type="text" id="inputSignal" placeholder="Insira sinal mundial para processamento tensor...">
+            <button onclick="processarTudo()">PROCESSAR SINAL</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>FLUXO DE PROBABILIDADE (EDOM / ISHMAEL)</h3>
+        <div class="stats">
+            <div class="stat-card" style="border-color: var(--edom)">
+                EDOM <span id="v-edom" class="stat-val">0%</span>
+            </div>
+            <div class="stat-card">
+                NEUTRO <span id="v-neutro" class="stat-val">0%</span>
+            </div>
+            <div class="stat-card" style="border-color: var(--ishmael)">
+                ISHMAEL <span id="v-ishmael" class="stat-val">0%</span>
+            </div>
+        </div>
+        <div class="console" id="logConsole"> > Aguardando entrada de dados na borda...</div>
+    </div>
+
+    <div class="panel">
+        <h3>GEOMETRIA PROFUNDA EM TEMPO REAL</h3>
+        <canvas id="neuralChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Inicialização do Gráfico (Thor Engine Visual)
+    const ctx = document.getElementById('neuralChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Tensor Flow',
+                data: [],
+                borderColor: '#00ffcc',
+                backgroundColor: 'rgba(0, 255, 204, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, grid: { color: '#222' } }, x: { grid: { display: false } } } }
+    });
+
+    function addLog(msg) {
+        const consoleEl = document.getElementById('logConsole');
+        consoleEl.innerHTML += `<br>> ${new Date().toLocaleTimeString()}: ${msg}`;
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    async function processarTudo() {
+        const text = document.getElementById('inputSignal').value;
+        addLog("Iniciando Metaprogramação de Tensores...");
+
+        try {
+            // Chamada ao Cérebro PyTorch
+            const response = await fetch('http://localhost:5000/analyze', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({text: text})
+            });
+            const data = await response.json();
+
+            // Atualização dos Dados Neutros
+            document.getElementById('v-edom').innerText = (data.edom_friction * 100).toFixed(1) + "%";
+            document.getElementById('v-ishmael').innerText = (data.ishmael_evolution * 100).toFixed(1) + "%";
+            document.getElementById('v-neutro').innerText = (data.neutral_balance * 100).toFixed(1) + "%";
+
+            // Atualização do Gráfico
+            if (chart.data.labels.length > 15) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
+            chart.data.labels.push(new Date().toLocaleTimeString().split(' ')[0]);
+            chart.data.datasets[0].data.push(data.neutral_balance);
+            chart.update();
+
+            addLog(`Evolução: ${data.meta_evolution} | Engine: ${data.engine}`);
+
+        } catch (e) {
+            addLog("ERRO: O motor Python (app_core.py) não responde.");
+        }
+    }
+</script>
+</body>
+</html>
